@@ -15,7 +15,7 @@ def get_sum(a, b):
 
 
 @app.route("/books/<int:id>")
-def book(id):
+def get_book(id):
     try:
         return books[id]
     except Exception as e:
