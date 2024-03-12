@@ -1,14 +1,52 @@
 // 取得主繪製區域
 const chart1 = echarts.init(document.getElementById('main'));
 const chart2 = echarts.init(document.getElementById('six'));
+const chart3 = echarts.init(document.getElementById('county'));
 
 $("#update").click(() => {
     console.log("click!");
     drawPM25();
 });
 
+// select選擇option時的監聽
+$("#select_county").change(() => {
+    county = $("#select_county").val();
+    // console.log(county);
+
+});
 // 呼叫後端資料跟繪製
 drawPM25();
+
+function drawCountyPM25(county) {
+    chart3.showLoading();
+    $.ajax(
+        {
+            url: `/county-pm25-data/${county}`,
+            type: "GET",
+            dataType: "json",
+            success: (result) => {
+
+
+                drawChat(chart3, county, "PM2.5", result['site'], result['pm25'])
+                chart3.hideLoading();
+
+            },
+            error: () => {
+                alert("讀取資料失敗，請稍後再試!");
+                chart3.hideLoading();
+
+            }
+
+        }
+    )
+}
+
+
+
+
+
+
+
 function drawSixPM25() {
     chart2.showLoading();
     $.ajax(
