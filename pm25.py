@@ -5,11 +5,25 @@ df = None
 six_countys = ["臺北市", "新北市", "桃園市", "臺中市", "臺南市", "高雄市"]
 
 
+def get_county_pm25(county):
+    global df
+    if df is None:
+        df = pd.read_csv(url).dropna()
+
+    df1 = df.groupby("county").get_group(county)
+    columns = df1.columns.tolist()
+    values = df1.values.tolist()
+
+    return columns, values
+
+
 def get_countys():
     global df
     if df is None:
         df = pd.read_csv(url).dropna()
+
     countys = df["county"].unique()
+
     return countys
 
 
@@ -17,6 +31,7 @@ def get_pm25():
     global df
     if df is None:
         df = pd.read_csv(url).dropna()
+
     columns = df.columns.tolist()
     values = df.values.tolist()
 
@@ -27,22 +42,12 @@ def get_six_pm25():
     global df
     if df is None:
         df = pd.read_csv(url).dropna()
+
     pm25 = []
     for county in six_countys:
         pm25.append(round(df.groupby("county").get_group(county)["pm25"].mean(), 2))
 
     return pm25
-
-
-def get_county_pm25(county):
-    global df
-    if df is None:
-        df = pd.read_csv(url).dropna()
-    df1.groupby("county").get_group(county)
-    columns = df1.columns.tolist()
-    values = df1.values.tolist()
-
-    return columns, values
 
 
 if __name__ == "__main__":

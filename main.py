@@ -14,6 +14,22 @@ def pm25_charts():
     return render_template("pm25-charts.html", countys=countys)
 
 
+@app.route("/county-pm25-data/<county>", methods=["GET"])
+def county_pm25_data(county):
+    columns, values = get_county_pm25(county)
+    site = [value[0] for value in values]
+    pm25 = [value[2] for value in values]
+    result = json.dumps(
+        {
+            "site": site,
+            "pm25": pm25,
+        },
+        ensure_ascii=False,
+    )
+
+    return result
+
+
 @app.route("/six-pm25-data")
 def six_pm25_data():
     pm25 = get_six_pm25()
@@ -24,16 +40,17 @@ def six_pm25_data():
         },
         ensure_ascii=False,
     )
+
     return result
 
 
 @app.route("/pm25-data", methods=["GET"])
 def pm25_data():
     columns, values = get_pm25()
-
     site = [value[0] for value in values]
     pm25 = [value[2] for value in values]
     datetime = values[0][-2]
+
     # 取得最高跟最低的數據
     sorted_data = sorted(values, key=lambda x: x[2])
     # print(sorted_data)
@@ -51,23 +68,7 @@ def pm25_data():
         },
         ensure_ascii=False,
     )
-    return result
 
-
-@app.route("/county-pm25-data/<county>", methods=["GET"])
-def county_pm25_data(county):
-    columns, values = get_county_pm25(county)
-
-    site = [value[0] for value in values]
-    pm25 = [value[2] for value in values]
-
-    result = json.dumps(
-        {
-            "site": site,
-            "pm25": pm25,
-        },
-        ensure_ascii=False,
-    )
     return result
 
 
